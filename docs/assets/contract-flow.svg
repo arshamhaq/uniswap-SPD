@@ -1,0 +1,147 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1120" viewBox="0 0 1600 1120" role="img" aria-labelledby="title desc">
+  <title id="title">uniswap-SPD contract interaction flow</title>
+  <desc id="desc">A clean architecture diagram showing the user, RouterSPD, SPD_USD_LP, ERC20SPD, and MockUSD or Sepolia USDT, followed by separate add, swap, and remove transaction flows.</desc>
+
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#05070b"/>
+      <stop offset="1" stop-color="#0a111a"/>
+    </linearGradient>
+    <linearGradient id="routerBackground" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#161226"/>
+      <stop offset="1" stop-color="#21122c"/>
+    </linearGradient>
+    <linearGradient id="pairBackground" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1a29"/>
+      <stop offset="1" stop-color="#10263a"/>
+    </linearGradient>
+    <pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse">
+      <path d="M36 0H0V36" fill="none" stroke="#263849" stroke-width="1" opacity="0.26"/>
+      <circle cx="0" cy="0" r="1.3" fill="#5c7690" opacity="0.35"/>
+    </pattern>
+    <marker id="blueArrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0v6l9-3z" fill="#65b8ff"/>
+    </marker>
+    <marker id="pinkArrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0v6l9-3z" fill="#ef6dcd"/>
+    </marker>
+    <marker id="orangeArrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0v6l9-3z" fill="#ffa34d"/>
+    </marker>
+    <marker id="greenArrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0v6l9-3z" fill="#58d98b"/>
+    </marker>
+    <style>
+      .heading { font: 700 45px Inter, "DejaVu Sans", sans-serif; letter-spacing: 2px; fill: #f7f9fc; }
+      .subheading { font: 500 17px Inter, "DejaVu Sans", sans-serif; letter-spacing: 4px; fill: #91a7bd; }
+      .nodeTitle { font: 700 27px Inter, "DejaVu Sans", sans-serif; fill: #f7f9fc; }
+      .nodeSubtitle { font: 500 16px Inter, "DejaVu Sans", sans-serif; fill: #aebdcb; }
+      .method { font: 500 15px "DejaVu Sans Mono", ui-monospace, monospace; fill: #d8e2ec; }
+      .arrowLabel { font: 600 15px Inter, "DejaVu Sans", sans-serif; }
+      .laneTitle { font: 700 20px Inter, "DejaVu Sans", sans-serif; }
+      .laneText { font: 500 15px Inter, "DejaVu Sans", sans-serif; fill: #d0dae4; }
+      .step { font: 700 14px Inter, "DejaVu Sans", sans-serif; fill: #07101a; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="1120" fill="url(#background)"/>
+  <rect width="1600" height="1120" fill="url(#grid)"/>
+
+  <text x="800" y="66" text-anchor="middle" class="heading">UNISWAP-SPD CONTRACT FLOW</text>
+  <text x="800" y="100" text-anchor="middle" class="subheading">FIXED SPD / USD CONSTANT-PRODUCT AMM</text>
+
+  <!-- User -->
+  <rect x="55" y="280" width="235" height="250" rx="22" fill="#0e151e" stroke="#748ba1" stroke-width="2"/>
+  <circle cx="172" cy="347" r="32" fill="none" stroke="#dce7f2" stroke-width="4"/>
+  <path d="M110 449c8-48 32-72 62-72s54 24 62 72" fill="none" stroke="#dce7f2" stroke-width="4"/>
+  <text x="172" y="495" text-anchor="middle" class="nodeTitle">User / LP</text>
+
+  <!-- RouterSPD -->
+  <rect x="380" y="185" width="355" height="440" rx="24" fill="url(#routerBackground)" stroke="#ef6dcd" stroke-width="2.5"/>
+  <text x="557" y="236" text-anchor="middle" class="nodeTitle">RouterSPD</text>
+  <text x="557" y="265" text-anchor="middle" class="nodeSubtitle">user-facing coordination layer</text>
+  <line x1="415" y1="288" x2="700" y2="288" stroke="#573b60"/>
+  <text x="420" y="329" class="method">addLiquidity(...)</text>
+  <text x="420" y="369" class="method">removeLiquidity(...)</text>
+  <text x="420" y="409" class="method">swapExactInput(...)</text>
+  <text x="420" y="469" class="method">getAmountOut(...)</text>
+  <text x="420" y="509" class="method">getReserves()</text>
+  <line x1="415" y1="535" x2="700" y2="535" stroke="#573b60"/>
+  <text x="420" y="572" class="nodeSubtitle">SafeERC20 · ReentrancyGuard</text>
+  <text x="420" y="600" class="nodeSubtitle">immutable SPD · USD · Pair</text>
+
+  <!-- SPD_USD_LP -->
+  <rect x="850" y="185" width="395" height="440" rx="24" fill="url(#pairBackground)" stroke="#65b8ff" stroke-width="2.5"/>
+  <text x="1047" y="236" text-anchor="middle" class="nodeTitle">SPD_USD_LP</text>
+  <text x="1047" y="265" text-anchor="middle" class="nodeSubtitle">Pair contract and ERC20 LP token</text>
+  <line x1="888" y1="288" x2="1207" y2="288" stroke="#315b7d"/>
+  <text x="892" y="329" class="method">getReserves()</text>
+  <text x="892" y="369" class="method">previewMint(...) · previewBurn(...)</text>
+  <text x="892" y="409" class="method">mint(to) · burn(to)</text>
+  <text x="892" y="449" class="method">swap(amount0Out, amount1Out, to)</text>
+  <line x1="888" y1="477" x2="1207" y2="477" stroke="#315b7d"/>
+  <text x="892" y="517" class="method">reserve0 = SPD · uint112</text>
+  <text x="892" y="557" class="method">reserve1 = USD · uint112</text>
+  <text x="892" y="598" class="nodeSubtitle">LP mint/burn · balance checks · Sync</text>
+
+  <!-- ERC20SPD -->
+  <rect x="1320" y="155" width="225" height="220" rx="22" fill="#111820" stroke="#65b8ff" stroke-width="2"/>
+  <circle cx="1432" cy="211" r="35" fill="#172534" stroke="#65b8ff" stroke-width="2.5"/>
+  <text x="1432" y="229" text-anchor="middle" font-family="Georgia, 'DejaVu Serif', serif" font-size="54" fill="#ffffff">♠</text>
+  <text x="1432" y="278" text-anchor="middle" class="nodeTitle">ERC20SPD</text>
+  <text x="1432" y="309" text-anchor="middle" class="nodeSubtitle">token0 · 18 decimals</text>
+  <text x="1432" y="346" text-anchor="middle" class="method">ERC20 transfer API</text>
+
+  <!-- USD token -->
+  <rect x="1320" y="430" width="225" height="220" rx="22" fill="#102019" stroke="#58d98b" stroke-width="2"/>
+  <circle cx="1432" cy="486" r="35" fill="#1b7044" stroke="#7aeaa7" stroke-width="2.5"/>
+  <text x="1432" y="503" text-anchor="middle" font-family="Inter, 'DejaVu Sans', sans-serif" font-size="45" font-weight="700" fill="#ffffff">$</text>
+  <text x="1432" y="553" text-anchor="middle" class="nodeTitle">USD token</text>
+  <text x="1432" y="584" text-anchor="middle" class="nodeSubtitle">token1 · MUSD / USDT</text>
+  <text x="1432" y="621" text-anchor="middle" class="method">ERC20 transfer API</text>
+
+  <!-- User and Router interaction -->
+  <path d="M290 360H363" fill="none" stroke="#ef6dcd" stroke-width="3.5" marker-end="url(#pinkArrow)"/>
+  <text x="326" y="342" text-anchor="middle" class="arrowLabel" fill="#f38bd9">calls</text>
+  <path d="M363 468H290" fill="none" stroke="#65b8ff" stroke-width="2.7" stroke-dasharray="7 6" marker-end="url(#blueArrow)"/>
+  <text x="326" y="496" text-anchor="middle" class="arrowLabel" fill="#92ccff">returns</text>
+
+  <!-- Router and Pair interaction: three separate, non-crossing lanes -->
+  <path d="M735 310H833" fill="none" stroke="#65b8ff" stroke-width="3" marker-end="url(#blueArrow)"/>
+  <text x="784" y="292" text-anchor="middle" class="arrowLabel" fill="#92ccff">views</text>
+  <path d="M735 405H833" fill="none" stroke="#ef6dcd" stroke-width="3" marker-end="url(#pinkArrow)"/>
+  <text x="784" y="387" text-anchor="middle" class="arrowLabel" fill="#f38bd9">mint / swap</text>
+  <path d="M735 505H833" fill="none" stroke="#ffa34d" stroke-width="3" marker-end="url(#orangeArrow)"/>
+  <text x="784" y="487" text-anchor="middle" class="arrowLabel" fill="#ffbd7e">LP / burn</text>
+
+  <!-- Pair and token interaction -->
+  <path d="M1245 275H1303" fill="none" stroke="#65b8ff" stroke-width="3" marker-end="url(#blueArrow)"/>
+  <text x="1274" y="251" text-anchor="middle" class="arrowLabel" fill="#92ccff">balance</text>
+  <text x="1274" y="315" text-anchor="middle" class="arrowLabel" fill="#92ccff">transfer</text>
+  <path d="M1303 326H1245" fill="none" stroke="#65b8ff" stroke-width="2.5" stroke-dasharray="6 6" marker-end="url(#blueArrow)"/>
+
+  <path d="M1245 500H1303" fill="none" stroke="#58d98b" stroke-width="3" marker-end="url(#greenArrow)"/>
+  <text x="1274" y="476" text-anchor="middle" class="arrowLabel" fill="#82e8aa">balance</text>
+  <text x="1274" y="592" text-anchor="middle" class="arrowLabel" fill="#82e8aa">transfer</text>
+  <path d="M1303 570H1245" fill="none" stroke="#58d98b" stroke-width="2.5" stroke-dasharray="6 6" marker-end="url(#greenArrow)"/>
+
+  <!-- Router transfer note -->
+  <rect x="380" y="655" width="865" height="54" rx="13" fill="#0d141d" stroke="#34495d"/>
+  <text x="812" y="689" text-anchor="middle" class="nodeSubtitle">Router calls token.safeTransferFrom(user, Pair, amount); tokens move directly from User to Pair.</text>
+
+  <!-- Transaction flows -->
+  <rect x="55" y="755" width="1490" height="105" rx="18" fill="#0c131c" stroke="#36536d" stroke-width="2"/>
+  <circle cx="100" cy="807" r="23" fill="#65b8ff"/><text x="100" y="812" text-anchor="middle" class="step">1</text>
+  <text x="143" y="799" class="laneTitle" fill="#65b8ff">ADD LIQUIDITY</text>
+  <text x="143" y="831" class="laneText">Approve SPD and USD → Router.addLiquidity → tokens move User → Pair → Pair.mint(user) → LP shares move Pair → User → Sync</text>
+
+  <rect x="55" y="880" width="1490" height="105" rx="18" fill="#0c131c" stroke="#6b3d66" stroke-width="2"/>
+  <circle cx="100" cy="932" r="23" fill="#ef6dcd"/><text x="100" y="937" text-anchor="middle" class="step">2</text>
+  <text x="143" y="924" class="laneTitle" fill="#ef6dcd">SWAP</text>
+  <text x="143" y="956" class="laneText">Approve tokenIn → Router quotes output → tokenIn moves User → Pair → Pair.swap(..., user) → tokenOut moves Pair → User → Sync</text>
+
+  <rect x="55" y="1005" width="1490" height="82" rx="18" fill="#0c131c" stroke="#705334" stroke-width="2"/>
+  <circle cx="100" cy="1046" r="23" fill="#ffa34d"/><text x="100" y="1051" text-anchor="middle" class="step">3</text>
+  <text x="143" y="1038" class="laneTitle" fill="#ffa34d">REMOVE LIQUIDITY</text>
+  <text x="143" y="1070" class="laneText">Approve LP → Router moves LP User → Pair → Pair.burn(user) → Pair burns held LP → SPD and USD move Pair → User → Sync</text>
+</svg>
